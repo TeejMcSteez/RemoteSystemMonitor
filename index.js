@@ -1,8 +1,11 @@
 const fs = require('node:fs'); // DOC: https://nodejs.org/api/fs.html
 const path = require('node:path'); // DOC: https://nodejs.org/api/path.html
-const http = require('node:http'); // DOC: https://nodejs.org/api/synopsis.html#
+const fileManager = require('./readFiles.js');
+const express = require("express");
+const server = express();
 
-const hostname = '';
+
+const hostname = 'localhost';
 const port = 3000;
 const CPU_TEMPERATURE_DIRECTORY = "/sys/class/hwmon/hwmon2"; // CPU Temp Directory
 const MOTHERBOARD_DIRECTORY = "/sys/class/hwmon/hwmon3"; // Motherboard IO Directory
@@ -14,36 +17,24 @@ const MOTHERBOARD_DIRECTORY = "/sys/class/hwmon/hwmon3"; // Motherboard IO Direc
 // Also display other information if possible such as certain log files as well
 // as system errors and availible memory etc.
 
-// Reads the content of a folder
-async function readFolder(dir) {
-    try {
-        let contents =  fs.readdir();
-        return contents;
-    } catch (error) {
-        console.log(`Could not read directory, ${error.message}`);
-    }
-}
-// Finds the files containing temperature values within the directory
-function findTemperatureFiles(dirContents) {
-    const tempRegex = /(temp\d+_\w)/; // Finds all files with temperature reading 
-    let matches = tempRegex.match(dirContents);
-    if (!matches) {
-        console.log("There is no temperature information in this directory");
-    }
-    let labels = [];
-    matches.forEach(match => {
-        labels.push({LABEL: match}); // Adds each temperature label to a new label element
+// DO more research on how to properly manage html on the backend so you can edit the html properly and load for the client properly. 
+
+async function loadHTMLValues() {
+    let folderContents = fileManager.readFolder(CPU_TEMPERATURE_DIRECTORY);
+    let labels = []; // Contains all the filenames of readings
+    folderContents.forEach(filename => {
+        labels.push({filename});
     });
-    return labels; // Returns object array of all labels in the dir
-}
-// Finds the values of the temperature values from the files within the directory
-async function findTemperatureValues(labels, dir) {
-    let readings = [];
+    let readings = [] // Stores labels with there values
     labels.forEach(label => {
-        let currentDir = dir // Resets directory name with the home directory before appending new file label to search
-        currentDir.append("/" + label.LABEL); // Appends name of file to home directory
-        let reading = fs.readFile(currentDir); // Reads file from the current directory
-        readings.push({LABEL: label.LABEL, VALUE: reading}); // Pushes read value with label to readings array to handle
+        readings.push({NAME: label.LABEL, VALUE:fileManager.findTemperatureValues(label.LABEL)});
     });
-    return readings;
 }
+
+server.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '/public/index.html'));
+});
+
+server.get('api/data')
+
+server.listen(port, () => console.log(`Server listening on port: http://${hostname}:${port}`));
