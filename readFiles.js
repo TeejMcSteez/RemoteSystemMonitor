@@ -1,35 +1,43 @@
+const fs = require('node:fs');
 // Reads the content of a folder
 async function readFolder(dir) {
     try {
-        let contents =  fs.readdir();
+        let contents =  await fs.readdir();
         return contents; // Returns an array of all the contents in the file
     } catch (error) {
         console.log(`Could not read directory, ${error.message}`);
+        return []; // If it cannot read a directory returns empty array
     }
 }
+
 // Finds the files containing temperature values within the directory
 function findTemperatureFiles(dirContents) {
-    const tempRegex = /(temp\d+_\w)/; // Finds all files with temperature reading 
-    let matches = tempRegex.match(dirContents);
+    const tempRegex = /temp\d+_\w+/; // Finds all files with temperature reading 
+    let matches = dirContents.filter(filename => tempRegex.test(filename)); // Reseach .filter()
     if (!matches) {
         console.log("There is no temperature information in this directory");
     }
-    let labels = [];
-    matches.forEach(match => {
-        labels.push({LABEL: match}); // Adds each temperature label to a new label element
-    });
-    return labels; // Returns object array of all labels in the dir
+    return matches.map(match => ({ // Research .map()
+        LABEL: match
+    }));// Returns object array of all labels in the dir
 }
 
 // Finds the values of the temperature values from the files within the directory
-async function findTemperatureValues(labels, dir) {
+async function findTemperatureValues(dir, labels) {
     let readings = [];
-    labels.forEach(label => {
-        let currentDir = dir // Resets directory name with the home directory before appending new file label to search
-        currentDir.append("/" + label.LABEL); // Appends name of file to home directory
-        let reading = fs.readFile(currentDir); // Reads file from the current directory
-        readings.push({LABEL: label.LABEL, VALUE: reading}); // Pushes read value with label to readings array to handle
-    });
+    for (const label of labels) {
+        try { // joins home name with label name and reads information from the file
+            // Finally it pushes the information to the readings array to be returned for use
+            const filePath = path.join(dir, label.LABEL); 
+            const reading = await fs.readFile(filePath, 'utf8');
+            readings.push ({
+                LABEL: label.LABEL,
+                VALUE: reading.trim()
+            });
+        } catch (error) {
+            console.error(`Could not read file ${label.LABEL}: ${error.message}`);
+        }
+    }
     return readings;
 }
 

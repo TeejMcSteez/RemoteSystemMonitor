@@ -2,6 +2,7 @@ const fs = require('node:fs'); // DOC: https://nodejs.org/api/fs.html
 const path = require('node:path'); // DOC: https://nodejs.org/api/path.html
 const fileManager = require('./readFiles.js');
 const express = require("express");
+const { dir } = require('node:console');
 const server = express();
 
 
@@ -19,22 +20,23 @@ const MOTHERBOARD_DIRECTORY = "/sys/class/hwmon/hwmon3"; // Motherboard IO Direc
 
 // DO more research on how to properly manage html on the backend so you can edit the html properly and load for the client properly. 
 
-async function loadHTMLValues() {
-    let folderContents = fileManager.readFolder(CPU_TEMPERATURE_DIRECTORY);
-    let labels = []; // Contains all the filenames of readings
-    folderContents.forEach(filename => {
-        labels.push({filename});
-    });
-    let readings = [] // Stores labels with there values
-    labels.forEach(label => {
-        readings.push({NAME: label.LABEL, VALUE:fileManager.findTemperatureValues(label.LABEL)});
-    });
-}
-
 server.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '/public/index.html'));
 });
 
-server.get('api/data')
+server.get('/api/temperatures', async (req, res) => {
+    try {
+        const dirContents = await fileManager.readFolder(CPU_TEMPERATURE_DIRECTORY);
+
+        const tempFiles = fileManager.findTemperatureFiles(dirContents);
+
+        const readings = await fileManager.findTemperatureValues(CPU_TEMPERATURE_DIRECTORY, tempFiles);
+
+        res.json(readings);
+    } catch (error) {
+        console.error(`Error fetching temperatures ${error.message}`);
+        res.status(500).json({error: 'Could not fetch temperatures'});
+    }
+});
 
 server.listen(port, () => console.log(`Server listening on port: http://${hostname}:${port}`));

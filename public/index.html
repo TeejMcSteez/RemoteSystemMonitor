@@ -3,19 +3,47 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="stylesheet.css">;
     <title>Remote PC Readings</title>
 </head>
 <body>
+    <h1>Hardware Information</h1>
 
-    <div id="readingsTable">
-        <table id="table">
-                <tr id="tableRow">
-                    <th id="tableHeader"> Readings Label:
-                        <td id="tableCell"> Value</td>
-                    </th>
+    <table id="readingsTable">
+        <thead>
+                <tr>
+                    <th>Readings Label</th>
+                    <th>Temperature</th>
                 </tr>
-        </table>
-    </div>
+        </thead>
+        <tbody id="readingsBody">
+
+        </tbody>
+    </table>
+
+    <script>
+        async function updateTemperatures() {
+            try {
+                const response = await fetch('/api/temperatures');
+                const data = await response.json();
+
+                const tableBody = document.getElementById('readingsBody');
+                tableBody.innerHTML = '';
+
+                readings.forEach(reading => {
+                    const row = document.getElementById('tr');
+                    row.innerHTML = `<td>${reading.LABEL}</td><td>${reading.VALUE}</td>`;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.log('Error updating temperatures');
+            }
+        }
+
+        updateTemperatures();
+
+        setInterval(updateTemperatures, 5000);
+    </script>
     
 </body>
 </html>
