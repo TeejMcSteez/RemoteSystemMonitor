@@ -44,7 +44,7 @@
                 data.forEach(reading => {
                     if (reading.LABEL.includes('_input') || reading.LABEL.includes('_label')) {
                         const row = document.createElement('tr');
-                        const baseName = reading.label.replace(/_input|_label/, '');
+                        const baseName = reading.LABEL.replace(/_input|_label/, '');
                         row.innerHTML = `<td>${reading.LABEL}</td><td>${reading.VALUE}</td>`;
                         tableBody.appendChild(row);
                     }                    
