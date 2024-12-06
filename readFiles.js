@@ -3,12 +3,14 @@ const fs = require('node:fs');
 async function readFolder(dir) {
     try {
         let contents =  await fs.readdir(dir, (err, buffer) => {
+            console.log(`Readings files from ${dir}`);
             if (err) {
                 return;
             } else {
                 contents = buffer;
             }
         });
+        console.log(`Buffer ${buffer}: Dir Contents: ${contents}`);
         return contents; // Returns an array of all the contents in the file
     } catch (error) {
         console.log(`Could not read directory, ${error.message}`);
