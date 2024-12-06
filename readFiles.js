@@ -50,7 +50,7 @@ function findTemperatureValues(dir, labels) {
                 if (err) {
                     reject(`Could not read value from ${filePath}`);
                 } else {
-                    resolve(buffer);
+                    resolve([label.LABEL, buffer]); // I want to resolve the value along with the label name
                 }
             });
         }

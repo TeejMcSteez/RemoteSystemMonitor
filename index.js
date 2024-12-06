@@ -28,7 +28,6 @@ server.get('/', (req, res) => {
 
 server.get('/api/temperatures', async (req, res) => {
     try {
-        let JSONReponse = [];
         const contents = await fileManager.readFolder(CPU_TEMPERATURE_DIRECTORY);
         console.log(contents);
 
@@ -36,11 +35,8 @@ server.get('/api/temperatures', async (req, res) => {
 
         const readings = await fileManager.findTemperatureValues(CPU_TEMPERATURE_DIRECTORY, tempFiles);
         // Prints ands sends each readings value as a json response
-        readings.forEach(reading => {
-            console.log(`Buffer reading ${reading.LABEL}\nValue:${reading.VALUE}`);
-            JSONReponse.push({LABEL: reading.LABEL, VALUE: reading.VALUE});
-        });
-        res.json(JSONReponse);
+        console.log(`Readings:\n${readings}`);
+        res.json(readings);
     } catch (error) {
         console.error(`Error fetching temperatures ${error.message}`);
         res.status(500).json({error: 'Could not fetch temperatures'});
