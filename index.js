@@ -11,9 +11,9 @@ const CPU_TEMPERATURE_DIRECTORY = '/sys/class/hwmon/hwmon2'; // CPU Temp Directo
 const MOTHERBOARD_DIRECTORY = "/sys/class/hwmon/hwmon3"; // Motherboard IO Directory
 
 // TODO:
-// access temperature information with fs and path and log it
-// take the logged data and output it to and HTML page 
-// and then serve the html (and css) locally with http.Server http module
+// access temperature information with fs and path and log it ✅
+// take the logged data and output it to and HTML page ✅
+// and then serve the html (and css) locally with express module ✅
 // Also display other information if possible such as certain log files as well
 // as system errors and availible memory etc.
 
@@ -46,5 +46,8 @@ server.get('/api/temperatures', async (req, res) => {
         res.status(500).json({error: 'Could not fetch temperatures'});
     }
 });
+
+// Add api endpoints to get useful motherboard files and add then to a new section in the table 
+// HERE
 
 server.listen(port, () => console.log(`Server listening on port: http://${hostname}:${port}`));

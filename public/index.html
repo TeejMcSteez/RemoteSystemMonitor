@@ -6,13 +6,24 @@
     <title>Remote PC Readings</title>
 </head>
 <body>
+    <style>
+        body {
+            height: 100%;
+            width: 100%;
+            background-color: grey;
+        }
+        th, td {
+            padding: 15px;
+        }
+    </style>
+
     <h1>Hardware Information</h1>
 
     <table id="readingsTable">
         <thead>
                 <tr>
                     <th>Readings Label</th>
-                    <th>Temperature</th>
+                    <th>Value</th>
                 </tr>
         </thead>
         <tbody id="readingsBody">
@@ -21,7 +32,6 @@
     </table>
 
     <script>
-        const baseURL = window.location.origin;
 
         async function updateTemperatures() {
             try {
@@ -32,9 +42,12 @@
                 tableBody.innerHTML = '';
 
                 data.forEach(reading => {
-                    const row = document.createElement('tr');
-                    row.innerHTML = `<td>${reading.LABEL}</td><td>${reading.VALUE}</td>`;
-                    tableBody.appendChild(row);
+                    if (reading.LABEL.includes('_input') || reading.LABEL.includes('_label')) {
+                        const row = document.createElement('tr');
+                        const baseName = reading.label.replace(/_input|_label/, '');
+                        row.innerHTML = `<td>${reading.LABEL}</td><td>${reading.VALUE}</td>`;
+                        tableBody.appendChild(row);
+                    }                    
                 });
             } catch (error) {
                 console.log(`Error updating temperatures: ${error.message}`);
@@ -43,7 +56,7 @@
 
         updateTemperatures();
 
-        setInterval(updateTemperatures, 5000);
+        setInterval(updateTemperatures, 3000);
     </script>
     
 </body>

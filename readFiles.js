@@ -26,6 +26,11 @@ function findTemperatureFiles(dirContents) {
     }));// Returns object array of all labels in the dir
 }
 
+// Finds useful motherboard files from the directory and returns the labels
+function findMotherboardFiles(dirContents) {
+    
+}
+
 // Finds the values of the temperature values from the files within the directory
 async function findTemperatureValues(dir, label) {
     return new Promise((resolve, reject) => {
@@ -40,6 +45,10 @@ async function findTemperatureValues(dir, label) {
             }
         });
     });
+}
+
+async function findMotherValues(dir, label) {
+    
 }
 
 module.exports = {readFolder, findTemperatureFiles, findTemperatureValues};
