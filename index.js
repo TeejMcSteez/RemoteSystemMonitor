@@ -2,6 +2,7 @@ const fs = require('node:fs').promises; // DOC: https://nodejs.org/api/fs.html
 const path = require('node:path'); // DOC: https://nodejs.org/api/path.html
 const fileManager = require('./readFiles.js');
 const express = require("express");
+const { read } = require('node:fs');
 const server = express();
 
 
@@ -27,6 +28,7 @@ server.get('/', (req, res) => {
 
 server.get('/api/temperatures', async (req, res) => {
     try {
+        let JSONReponse = [];
         const contents = await fileManager.readFolder(CPU_TEMPERATURE_DIRECTORY);
         console.log(contents);
 
@@ -35,9 +37,10 @@ server.get('/api/temperatures', async (req, res) => {
         const readings = await fileManager.findTemperatureValues(CPU_TEMPERATURE_DIRECTORY, tempFiles);
         // Prints ands sends each readings value as a json response
         readings.forEach(reading => {
-        res.json({LABEL: reading.LABEL, VALUE: reading.VALUE});
-        console.log(`Buffer reading ${reading.LABEL}\nValue:${reading.VALUE}`);
+            console.log(`Buffer reading ${reading.LABEL}\nValue:${reading.VALUE}`);
+            JSONReponse.push({LABEL: reading.LABEL, VALUE: reading.VALUE});
         });
+        res.json(JSONReponse);
     } catch (error) {
         console.error(`Error fetching temperatures ${error.message}`);
         res.status(500).json({error: 'Could not fetch temperatures'});
