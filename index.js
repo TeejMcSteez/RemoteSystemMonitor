@@ -1,4 +1,5 @@
 const fs = require('node:fs'); // DOC: https://nodejs.org/api/fs.html
+const fs = require('node:fs').promises;
 const path = require('node:path'); // DOC: https://nodejs.org/api/path.html
 const fileManager = require('./readFiles.js');
 const express = require("express");
@@ -8,7 +9,7 @@ const server = express();
 
 const hostname = '';
 const port = 3000;
-const CPU_TEMPERATURE_DIRECTORY = "/sys/class/hwmon/hwmon2"; // CPU Temp Directory
+const CPU_TEMPERATURE_DIRECTORY = '/sys/class/hwmon/hwmon2'; // CPU Temp Directory
 const MOTHERBOARD_DIRECTORY = "/sys/class/hwmon/hwmon3"; // Motherboard IO Directory
 
 // TODO:
@@ -26,7 +27,8 @@ server.get('/', (req, res) => {
 
 server.get('/api/temperatures', async (req, res) => {
     try {
-        const dirContents = await fileManager.readFolder(CPU_TEMPERATURE_DIRECTORY);
+        const contents = await fileManager.readFolder(CPU_TEMPERATURE_DIRECTORY);
+        console.log(contents);
 
         const tempFiles = fileManager.findTemperatureFiles(dirContents);
 

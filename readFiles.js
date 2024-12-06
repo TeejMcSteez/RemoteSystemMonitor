@@ -1,22 +1,17 @@
+const { rejects } = require('node:assert');
 const fs = require('node:fs');
 // Reads the content of a folder
-async function readFolder(dir) {
-    let contents;
-    try {
-        await fs.readdir(dir, (err, buffer) => {
+function readFolder(dir) { // Callback inside of a callback oh boy this should be good
+    return new Promise((resolve, reject) => {
+        fs.readdir(dir, (err, buffer) => {
             console.log(`Readings files from ${dir}`);
             if (err) {
-                return;
+                reject(`Could not read files from ${dir}`);
             } else {
-                contents = buffer;
+                resolve(buffer);
             }
         });
-        console.log(`Buffer ${buffer}`);
-        return contents; // Returns an array of all the contents in the file
-    } catch (error) {
-        console.log(`Could not read directory, ${error.message}`);
-        return []; // If it cannot read a directory returns empty array
-    }
+    });
 }
 
 // Finds the files containing temperature values within the directory
