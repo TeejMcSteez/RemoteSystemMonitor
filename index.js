@@ -1,9 +1,7 @@
-const fs = require('node:fs'); // DOC: https://nodejs.org/api/fs.html
-const fs = require('node:fs').promises;
+const fs = require('node:fs').promises; // DOC: https://nodejs.org/api/fs.html
 const path = require('node:path'); // DOC: https://nodejs.org/api/path.html
 const fileManager = require('./readFiles.js');
 const express = require("express");
-const { dir } = require('node:console');
 const server = express();
 
 
@@ -30,7 +28,7 @@ server.get('/api/temperatures', async (req, res) => {
         const contents = await fileManager.readFolder(CPU_TEMPERATURE_DIRECTORY);
         console.log(contents);
 
-        const tempFiles = fileManager.findTemperatureFiles(dirContents);
+        const tempFiles = fileManager.findTemperatureFiles(contents);
 
         const readings = await fileManager.findTemperatureValues(CPU_TEMPERATURE_DIRECTORY, tempFiles);
 

@@ -1,7 +1,7 @@
-const { rejects } = require('node:assert');
 const fs = require('node:fs');
+const path = require('node:path');
 // Reads the content of a folder
-function readFolder(dir) { // Callback inside of a callback oh boy this should be good
+function readFolder(dir) { // Callback inside of a callback oh boy this should be food
     return new Promise((resolve, reject) => {
         fs.readdir(dir, (err, buffer) => {
             console.log(`Readings files from ${dir}`);
@@ -26,23 +26,38 @@ function findTemperatureFiles(dirContents) {
     }));// Returns object array of all labels in the dir
 }
 
+// for (const label of labels) {
+//     try { // joins home name with label name and reads information from the file
+//         // Finally it pushes the information to the readings array to be returned for use
+//         const filePath = path.join(currentDir, label.LABEL); 
+//         const reading = await fs.readFile(filePath, 'utf8');
+//         readings.push ({
+//             LABEL: label.LABEL,
+//             VALUE: reading.trim()
+//         });
+//     } catch (error) {
+//         console.error(`Could not read file ${label.LABEL}: ${error.message}`);
+//     }
+
 // Finds the values of the temperature values from the files within the directory
-async function findTemperatureValues(dir, labels) {
+function findTemperatureValues(dir, labels) {
     let readings = [];
-    for (const label of labels) {
-        try { // joins home name with label name and reads information from the file
-            // Finally it pushes the information to the readings array to be returned for use
-            const filePath = path.join(dir, label.LABEL); 
-            const reading = await fs.readFile(filePath, 'utf8');
-            readings.push ({
-                LABEL: label.LABEL,
-                VALUE: reading.trim()
+    let currentDir = dir;
+    return new Promise((resolve, reject) => {
+       for (const label of labels) {
+            const filePath = path.join(currentDir, label.LABEL);
+            fs.readFile(filePath, (err, buffer) => {
+                console.log(`Reading file ${filePath}`);
+                if (err) {
+                    reject(`Could not read value from ${filePath}`);
+                } else {
+                    resolve(buffer);
+                    readings.push({LABEL: label.LABEL, VALUE: buffer.trim()});
+                }
             });
-        } catch (error) {
-            console.error(`Could not read file ${label.LABEL}: ${error.message}`);
         }
-    }
-    return readings;
+        
+    });    
 }
 
 module.exports = {readFolder, findTemperatureFiles, findTemperatureValues};
