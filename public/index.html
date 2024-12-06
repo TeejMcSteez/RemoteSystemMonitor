@@ -32,7 +32,7 @@
                 tableBody.innerHTML = '';
 
                 data.forEach(reading => {
-                    const row = document.getElementById('tr');
+                    const row = document.createElement('tr');
                     row.innerHTML = `<td>${reading.LABEL}</td><td>${reading.VALUE}</td>`;
                     tableBody.appendChild(row);
                 });
