@@ -6,7 +6,7 @@ const { dir } = require('node:console');
 const server = express();
 
 
-const hostname = 'localhost';
+const hostname = '';
 const port = 3000;
 const CPU_TEMPERATURE_DIRECTORY = "/sys/class/hwmon/hwmon2"; // CPU Temp Directory
 const MOTHERBOARD_DIRECTORY = "/sys/class/hwmon/hwmon3"; // Motherboard IO Directory
