@@ -56,7 +56,7 @@ function findTemperatureValues(dir, labels) {
             });
         }
         console.log(`Readings before resolve: ${readings}`);
-        resolve(readings); // One all values have been added to their labels resolves the array of data
+        resolve([readings]); // One all values have been added to their labels resolves the array of data
     });    
 }
 
