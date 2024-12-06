@@ -2,7 +2,13 @@ const fs = require('node:fs');
 // Reads the content of a folder
 async function readFolder(dir) {
     try {
-        let contents =  await fs.readdir();
+        let contents =  await fs.readdir(dir, (err, buffer) => {
+            if (err) {
+                return;
+            } else {
+                contents = buffer;
+            }
+        });
         return contents; // Returns an array of all the contents in the file
     } catch (error) {
         console.log(`Could not read directory, ${error.message}`);
