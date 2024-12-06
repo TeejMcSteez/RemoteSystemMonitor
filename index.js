@@ -24,6 +24,7 @@ server.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '/public', 'index.html'));
 });
 
+
 server.get('/api/temperatures', async (req, res) => {
     try {
         const contents = await fileManager.readFolder(CPU_TEMPERATURE_DIRECTORY);
@@ -32,7 +33,7 @@ server.get('/api/temperatures', async (req, res) => {
         const tempFiles = fileManager.findTemperatureFiles(contents);
 
         const readings = await fileManager.findTemperatureValues(CPU_TEMPERATURE_DIRECTORY, tempFiles);
-
+        console.log(readings);
         res.json(readings);
     } catch (error) {
         console.error(`Error fetching temperatures ${error.message}`);

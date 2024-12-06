@@ -56,7 +56,7 @@ function findTemperatureValues(dir, labels) {
                 }
             });
         }
-        
+        return readings;
     });    
 }
 
