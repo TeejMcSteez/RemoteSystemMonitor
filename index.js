@@ -33,7 +33,7 @@ server.get('/api/temperatures', async (req, res) => {
         const tempFiles = fileManager.findTemperatureFiles(contents);
 
         const readings = await fileManager.findTemperatureValues(CPU_TEMPERATURE_DIRECTORY, tempFiles);
-        console.log(readings);
+        console.log(`Readings from buffer: ${readings}`);
         res.json(readings);
     } catch (error) {
         console.error(`Error fetching temperatures ${error.message}`);
