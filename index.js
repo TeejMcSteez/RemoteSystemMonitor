@@ -18,9 +18,10 @@ const MOTHERBOARD_DIRECTORY = "/sys/class/hwmon/hwmon3"; // Motherboard IO Direc
 // as system errors and availible memory etc.
 
 // DO more research on how to properly manage html on the backend so you can edit the html properly and load for the client properly. 
+server.use(express.static(path.join(__dirname, 'public')));
 
 server.get('/', (req, res) => {
-    res.sendFile(path.join(__dirname, '/public/index.html'));
+    res.sendFile(path.join(__dirname, '/public', 'index.html'));
 });
 
 server.get('/api/temperatures', async (req, res) => {

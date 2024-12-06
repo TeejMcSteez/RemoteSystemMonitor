@@ -52,7 +52,7 @@ function findTemperatureValues(dir, labels) {
                     reject(`Could not read value from ${filePath}`);
                 } else {
                     resolve(buffer);
-                    readings.push({LABEL: label.LABEL, VALUE: buffer.trim()});
+                    readings.push({LABEL: label.LABEL, VALUE: buffer});
                 }
             });
         }
