@@ -32,7 +32,7 @@ server.get('/api/temperatures', async (req, res) => {
         const tempFiles = fileManager.findTemperatureFiles(contents);
 
        const readingsPromise =  await Promise.all(
-        tempFiles.map(file => fileManager.findTemperatureFiles(CPU_TEMPERATURE_DIRECTORY, file.LABEL))
+        tempFiles.map(file => fileManager.findTemperatureValues(CPU_TEMPERATURE_DIRECTORY, file.LABEL))
        );
 
        const readings = await Promise.all(readingsPromise);
