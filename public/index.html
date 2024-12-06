@@ -21,9 +21,11 @@
     </table>
 
     <script>
+        const baseURL = window.location.origin;
+
         async function updateTemperatures() {
             try {
-                const response = await fetch('/api/temperatures');
+                const response = await fetch(`${baseURL}/api/temperatures`);
                 const data = await response.json();
 
                 const tableBody = document.getElementById('readingsBody');
