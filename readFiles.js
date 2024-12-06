@@ -40,21 +40,22 @@ function findTemperatureFiles(dirContents) {
 //     }
 
 // Finds the values of the temperature values from the files within the directory
-function findTemperatureValues(dir, labels) {
-    let currentDir = dir;
-    return new Promise((resolve, reject) => {
-       for (const label of labels) {
-            const filePath = path.join(currentDir, label.LABEL);
-            fs.readFile(filePath, (err, buffer) => {
-                console.log(`Reading file ${filePath}`);
-                if (err) {
-                    reject(`Could not read value from ${filePath}`);
-                } else {
-                    resolve(buffer);
-                }
-            });
-        }
-    });    
+async function findTemperatureValues(dir, label) {
+    return new Promise((resolve, reject => {
+        const filePath = path.join(dir, label);
+
+        fs.readFile(filePath, 'utf8', (err, data) => {
+            if (err) {
+                console.log(`Could not read file ${label}`);
+                reject(err);
+            } else {
+                resolve({
+                    LABEL: label,
+                    VALUE: data.trim()
+                });
+            }
+        });
+    }));
 }
 
 module.exports = {readFolder, findTemperatureFiles, findTemperatureValues};
