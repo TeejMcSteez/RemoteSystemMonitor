@@ -29,7 +29,7 @@
                 const tableBody = document.getElementById('readingsBody');
                 tableBody.innerHTML = '';
 
-                readings.forEach(reading => {
+                data.forEach(reading => {
                     const row = document.getElementById('tr');
                     row.innerHTML = `<td>${reading.LABEL}</td><td>${reading.VALUE}</td>`;
                     tableBody.appendChild(row);

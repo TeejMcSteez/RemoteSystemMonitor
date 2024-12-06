@@ -42,6 +42,7 @@ function findTemperatureFiles(dirContents) {
 // Finds the values of the temperature values from the files within the directory
 function findTemperatureValues(dir, labels) {
     let currentDir = dir;
+    let readings = [];
     return new Promise((resolve, reject) => {
        for (const label of labels) {
             const filePath = path.join(currentDir, label.LABEL);
@@ -50,10 +51,11 @@ function findTemperatureValues(dir, labels) {
                 if (err) {
                     reject(`Could not read value from ${filePath}`);
                 } else {
-                    resolve([label.LABEL, buffer]); // I want to resolve the value along with the label name
+                    readings.push({LABEL: label.LABEL, VALUE: label.VALUE});
                 }
             });
         }
+        resolve(readings); // One all values have been added to their labels resolves the array of data
     });    
 }
 
