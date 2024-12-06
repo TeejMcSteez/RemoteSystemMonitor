@@ -51,10 +51,11 @@ function findTemperatureValues(dir, labels) {
                 if (err) {
                     reject(`Could not read value from ${filePath}`);
                 } else {
-                    readings.push({LABEL: label.LABEL, VALUE: label.VALUE});
+                    readings.push(label.LABEL, buffer);
                 }
             });
         }
+        console.log(`Readings before resolve: ${readings}`);
         resolve(readings); // One all values have been added to their labels resolves the array of data
     });    
 }
