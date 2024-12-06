@@ -37,7 +37,7 @@
                     tableBody.appendChild(row);
                 });
             } catch (error) {
-                console.log('Error updating temperatures');
+                console.log(`Error updating temperatures: ${error.message}`);
             }
         }
 
