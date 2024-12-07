@@ -59,7 +59,7 @@
 
         async function updateMotherboard() {
             try {
-                const response = await fetch('/api/motherboard');
+                const response = await fetch(`/api/motherboard`);
                 const data = await response.json();
 
                 const tableBody = document.getElementById('readingsBody');
