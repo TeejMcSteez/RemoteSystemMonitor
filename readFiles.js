@@ -28,12 +28,10 @@ function findTemperatureFiles(dirContents) {
 
 // Finds useful motherboard files from the directory and returns the labels
 function findMotherboardFiles(dirContents) {
-    const powerRegex = /power\d+_\w+/;
     const voltageRegex = /in\d+_\w+/;
     const fanRegex = /fan\d+_\w+/;
 
-    let matches = dirContents.filter(filename => powerRegex.test(filename));
-    matches.push(dirContents.filter(filename => voltageRegex.test(filename)));
+    let matches = dirContents.filter(filename => voltageRegex.test(filename));
     matches.push(dirContents.filter(filename => fanRegex.test(filename)));
     if (!matches) {
         console.log("There are no temperatures to map in this directory")
