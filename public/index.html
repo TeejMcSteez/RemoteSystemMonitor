@@ -62,12 +62,9 @@
                 const response = await fetch(`/api/motherboard`);
                 const data = await response.json();
 
-                const tableBody = document.getElementById('readingsBody');
-                tableBody.innerHTML = '';
-
                 data.forEach(reading => {
                     const row = document.createElement('tr');
-                    row.innerHTML = `<td>${reading.label}</td><td>${reading.VALUE}</td>`;
+                    row.innerHTML = `<td>${reading.LABEL}</td><td>${reading.VALUE}</td>`;
                     tableBody.appendChild(row);
                 });
             } catch (error) {
