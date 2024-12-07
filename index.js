@@ -8,8 +8,8 @@ require('dotenv').config();
 
 const hostname = process.env.HOSTNAME;
 const port = process.env.PORT;
-const CPU_TEMPERATURE_DIRECTORY = '/sys/class/hwmon/hwmon2'; // CPU Temp Directory
-const MOTHERBOARD_DIRECTORY = "/sys/class/hwmon/hwmon3"; // Motherboard IO Directory
+const CPU_TEMPERATURE_DIRECTORY = process.env.CPU_TEMPERATURE_DIRECTORY; // CPU Temp Directory
+const MOTHERBOARD_DIRECTORY = process.env.MOTHERBOARD_DIRECTORY; // Motherboard IO Directory
 
 // TODO:
 // access temperature information with fs and path and log it ✅
