@@ -1,4 +1,5 @@
 const fs = require('node:fs');
+const { machine } = require('node:os');
 const path = require('node:path');
 // Reads the content of a folder
 function readFolder(dir) { // Callback inside of a callback oh boy this should be food
@@ -32,12 +33,13 @@ function findMotherboardFiles(dirContents) {
     const voltageRegex = /in\d+_\w+/;
     const fanRegex = /fan\d+_\w+/;
 
-    let matches = dirContents.filter(filename => voltageRegex.test(filename) && fanRegex.test(filename));
+    let matches = dirContents.filter(filename => voltageRegex.test(filename));
+    matches.push(dirContents.filter(filename => fanRegex.test(filename)));
     
     console.log(`matches in motherboard files ${matches}`);
 
     if (!matches) {
-        console.log("There are no temperatures to map in this directory")
+        console.log("There are no temperatures to map in this directory");
     } 
 
     return matches.map(match => ({
