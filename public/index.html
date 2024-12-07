@@ -37,46 +37,37 @@
         </tbody>
     </table>
     <script>
-        async function updateTemperatures() {
+        async function updateValues() {
             try {
-                const response = await fetch(`/api/temperatures`);
-                const data = await response.json();
+                const [tempResponse, motherboardResponse] = await Promise.all([
+                    fetch('/api/temperatures'),
+                    fetch('/api/motherboard')
+                ]);
+
+                const temperatures = await tempResponse.json();
+                const motherboard = await motherboardResponse.json();
 
                 const tableBody = document.getElementById('readingsBody');
                 tableBody.innerHTML = '';
 
-                data.forEach(reading => {
-                    if (reading.LABEL.includes('_input') || reading.LABEL.includes('_label')) {
-                        const row = document.createElement('tr');
-                        row.innerHTML = `<td>${reading.LABEL}</td><td>${reading.VALUE}</td>`;
-                        tableBody.appendChild(row);
-                    }                    
-                });
-            } catch (error) {
-                console.log(`Error updating temperatures: ${error.message}`);
-            }
-        }
+                const combinedReadings = [
+                    ...temperatures.filter(reading => reading.LABEL.includes('_input') || reading.LABEL.includes('_label')), 
+                    ...motherboard];
 
-        async function updateMotherboard() {
-            try {
-                const response = await fetch(`/api/motherboard`);
-                const data = await response.json();
+                combinedReadings.sort((a,b) => a.LABEL.localeCompare(b.LABEL));
 
-                const tableBody = document.getElementById('readingsBody');
-
-                data.forEach(reading => {
+                combinedReadings.forEach(reading => {
                     const row = document.createElement('tr');
-                    row.innerHTML = `<td>${reading.LABEL}</td><td>${reading.VALUE}</td>`;
+                    row.innerHTML = `
+                        <td>${reading.LABEL}</td>
+                        <td>${reading.VALUE}</td>
+                    `;
                     tableBody.appendChild(row);
                 });
+
             } catch (error) {
-                console.log(`Error updating motherboard: ${error.message}`);
+                console.error(`Error updating temperatures: ${error.message}`);
             }
-        }
-        // So I only have to use one interval
-        async function updateValues() {     
-            await updateTemperatures();
-            await updateMotherboard();
         }
 
         updateValues();
