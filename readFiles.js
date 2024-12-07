@@ -32,12 +32,16 @@ function findMotherboardFiles(dirContents) {
     const voltageRegex = /in\d+_\w+/;
     const fanRegex = /fan\d+_\w+/;
 
-    let matches = dirContents.filter(filename => voltageRegex.test(filename));
-    matches += (dirContents.filter(filename => fanRegex.test(filename)));
+    let voltMatches = dirContents.filter(filename => voltageRegex.test(filename));
+    let fanMatches = (dirContents.filter(filename => fanRegex.test(filename)));
     console.log(`matches in motherboard files ${matches}`);
     if (!matches) {
         console.log("There are no temperatures to map in this directory")
     } 
+    let matches = [];
+    matches.push(voltMatches);
+    matches.push(fanMatches);
+
     return matches.map(match => ({
         LABEL: match 
     }));
