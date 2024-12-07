@@ -1,9 +1,9 @@
 const fs = require('node:fs').promises; // DOC: https://nodejs.org/api/fs.html
 const path = require('node:path'); // DOC: https://nodejs.org/api/path.html
-const fileManager = require('./readFiles.js');
-const express = require("express");
-const server = express();
-require('dotenv').config();
+const fileManager = require('./readFiles.js'); // Utils for index
+const express = require("express"); // DOC: https://expressjs.com/en/5x/api.html
+require('dotenv').config(); // DOC: https://www.npmjs.com/package/dotenv
+const server = express(); //Namespace for express call
 
 
 const hostname = process.env.HOSTNAME;
@@ -15,10 +15,9 @@ const MOTHERBOARD_DIRECTORY = process.env.MOTHERBOARD_DIRECTORY; // Motherboard 
 // access temperature information with fs and path and log it ✅
 // take the logged data and output it to and HTML page ✅
 // and then serve the html (and css) locally with express module ✅
-// Also display other information if possible such as certain log files as well
-// as system errors and availible memory etc.
+// Also display other information if possible such as certain log files as well ✅
+// as system errors and availible memory etc. 
 
-// DO more research on how to properly manage html on the backend so you can edit the html properly and load for the client properly. 
 server.use(express.static(path.join(__dirname, 'public')));
 
 server.get('/', (req, res) => {
@@ -36,8 +35,7 @@ server.get('/api/temperatures', async (req, res) => {
 
        const readings = await Promise.all(readingsPromise);
 
-        // Prints ands sends each readings value as a json response
-        console.log(`Readings:\n${readings}`);
+        // sends each readings value as a json response
         res.json(readings);
 
     } catch (error) {
@@ -56,7 +54,6 @@ server.get('/api/motherboard', async (req, res) => {
 
         const readings = await Promise.all(readingsPromise);
 
-        console.log(`Readings:\n${readings}`);
         res.json(readings);
         
     } catch (error) {
@@ -64,8 +61,5 @@ server.get('/api/motherboard', async (req, res) => {
         res.status(500).json({error: `Could not fetch temperature values`});
     }
 });
-
-// Add api endpoints to get useful motherboard files and add then to a new section in the table 
-// HERE
 
 server.listen(port, () => console.log(`Server listening on port: http://${hostname}:${port}`));

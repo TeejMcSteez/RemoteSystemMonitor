@@ -1,5 +1,4 @@
 const fs = require('node:fs');
-const { machine } = require('node:os');
 const path = require('node:path');
 // Reads the content of a folder
 function readFolder(dir) { // Callback inside of a callback oh boy this should be food
@@ -19,7 +18,7 @@ function readFolder(dir) { // Callback inside of a callback oh boy this should b
 function findTemperatureFiles(dirContents) {
     const tempRegex = /temp\d+_\w+/; // Finds all files with temperature reading 
     let matches = dirContents.filter(filename => tempRegex.test(filename)); // Reseach .filter()
-    console.log(`matches in CPU files ${matches}`);
+
     if (!matches) {
         console.log("There is no temperature information in this directory");
     }
@@ -38,8 +37,6 @@ function findMotherboardFiles(dirContents) {
 
     let matches = voltMatches.concat(fanMatches);
     
-    console.log(`matches in motherboard files ${matches}`);
-
     if (!matches) {
         console.log("There are no temperatures to map in this directory");
     } 
@@ -52,8 +49,6 @@ function findMotherboardFiles(dirContents) {
 // Finds the values of the temperature values from the files within the directory
 async function findValues(dir, label) {
     return new Promise((resolve, reject) => {
-        console.log(`Reading values from ${dir} at ${label}`);
-
         const filePath = path.join(dir, label);
 
         fs.readFile(filePath, 'utf8', (err, data) => {
