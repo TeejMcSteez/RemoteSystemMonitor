@@ -50,6 +50,8 @@ function findMotherboardFiles(dirContents) {
 // Finds the values of the temperature values from the files within the directory
 async function findValues(dir, label) {
     return new Promise((resolve, reject) => {
+        console.log(`Reading values from ${dir} at ${label}`);
+
         const filePath = path.join(dir, label);
 
         fs.readFile(filePath, 'utf8', (err, data) => {
