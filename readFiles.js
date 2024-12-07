@@ -32,7 +32,7 @@ function findMotherboardFiles(dirContents) {
     const fanRegex = /fan\d+_\w+/;
 
     let matches = dirContents.filter(filename => voltageRegex.test(filename));
-    matches.push(dirContents.filter(filename => fanRegex.test(filename)));
+    matches += (dirContents.filter(filename => fanRegex.test(filename)));
     if (!matches) {
         console.log("There are no temperatures to map in this directory")
     } 
