@@ -75,9 +75,9 @@
             }
         }
         // So I only have to use one interval
-        function updateValues() {     
-            updateTemperatures();
-            updateMotherboard();
+        async function updateValues() {     
+            await updateTemperatures();
+            await updateMotherboard();
         }
 
         updateValues();
