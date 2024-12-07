@@ -18,6 +18,7 @@ function readFolder(dir) { // Callback inside of a callback oh boy this should b
 function findTemperatureFiles(dirContents) {
     const tempRegex = /temp\d+_\w+/; // Finds all files with temperature reading 
     let matches = dirContents.filter(filename => tempRegex.test(filename)); // Reseach .filter()
+    console.log(`matches in CPU files ${matches}`);
     if (!matches) {
         console.log("There is no temperature information in this directory");
     }
@@ -33,6 +34,7 @@ function findMotherboardFiles(dirContents) {
 
     let matches = dirContents.filter(filename => voltageRegex.test(filename));
     matches += (dirContents.filter(filename => fanRegex.test(filename)));
+    console.log(`matches in motherboard files ${matches}`);
     if (!matches) {
         console.log("There are no temperatures to map in this directory")
     } 
