@@ -30,9 +30,7 @@
 
         </tbody>
     </table>
-
     <script>
-
         async function updateTemperatures() {
             try {
                 const response = await fetch(`/api/temperatures`);
@@ -53,9 +51,32 @@
             }
         }
 
-        updateTemperatures();
+        async function updateMotherboard() {
+            try {
+                const response = await fetch('/api/motherboard');
+                const data = await response.json();
 
-        setInterval(updateTemperatures, 3000);
+                const tableBody = document.getElementById('readingsBody');
+                tableBody.innerHTML = '';
+
+                data.forEach(reading => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td>${reading.label}</td><td>${reading.VALUE}</td>`;
+                    tableBody.appendChild(row);
+                });
+            } catch (error) {
+                console.log(`Error updating motherboard: ${error.message}`);
+            }
+        }
+        // So I only have to use one interval
+        function updateValues() {     
+            updateTemperatures();
+            updateMotherboard();
+        }
+
+        updateValues();
+        setInterval(updateValues, 3000);
+
     </script>
     
 </body>

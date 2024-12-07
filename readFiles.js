@@ -1,3 +1,4 @@
+const { rejects } = require('node:assert');
 const fs = require('node:fs');
 const path = require('node:path');
 // Reads the content of a folder
@@ -28,11 +29,23 @@ function findTemperatureFiles(dirContents) {
 
 // Finds useful motherboard files from the directory and returns the labels
 function findMotherboardFiles(dirContents) {
-    
+    const powerRegex = /power\d+_\w+/;
+    const voltageRegex = /in\d+_\w+/;
+    const fanRegex = /fan\d+_\w+/;
+
+    let matches = dirContents.filter(filename => powerRegex.test(filename));
+    matches.push(dirContents.filter(filename => voltageRegex.test(filename)));
+    matches.push(dirContents.filter(filename => fanRegex.test(filename)));
+    if (!matches) {
+        console.log("There are no temperatures to map in this directory")
+    } 
+    return matches.map(match => ({
+        LABEL: match 
+    }));
 }
 
 // Finds the values of the temperature values from the files within the directory
-async function findTemperatureValues(dir, label) {
+async function findValues(dir, label) {
     return new Promise((resolve, reject) => {
         const filePath = path.join(dir, label);
 
@@ -47,8 +60,4 @@ async function findTemperatureValues(dir, label) {
     });
 }
 
-async function findMotherValues(dir, label) {
-    
-}
-
-module.exports = {readFolder, findTemperatureFiles, findTemperatureValues};
+module.exports = {readFolder, findTemperatureFiles, findMotherboardFiles, findValues};

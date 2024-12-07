@@ -2,6 +2,8 @@ const fs = require('node:fs').promises; // DOC: https://nodejs.org/api/fs.html
 const path = require('node:path'); // DOC: https://nodejs.org/api/path.html
 const fileManager = require('./readFiles.js');
 const express = require("express");
+const { read } = require('node:fs');
+const { console } = require('node:inspector');
 const server = express();
 
 
@@ -31,9 +33,7 @@ server.get('/api/temperatures', async (req, res) => {
 
         const tempFiles = fileManager.findTemperatureFiles(contents);
 
-       const readingsPromise =  await Promise.all(
-        tempFiles.map(file => fileManager.findTemperatureValues(CPU_TEMPERATURE_DIRECTORY, file.LABEL))
-       );
+       const readingsPromise =  await Promise.all(tempFiles.map(file => fileManager.findValues(CPU_TEMPERATURE_DIRECTORY, file.LABEL)));
 
        const readings = await Promise.all(readingsPromise);
 
@@ -44,6 +44,25 @@ server.get('/api/temperatures', async (req, res) => {
     } catch (error) {
         console.error(`Error fetching temperatures ${error.message}`);
         res.status(500).json({error: 'Could not fetch temperatures'});
+    }
+});
+
+server.get('/api/motherboard', async (req, res) => {
+    try {
+        const contents = await fileManager.readFolder(MOTHERBOARD_DIRECTORY);
+
+        const tempFiles = fileManager.findMotherboardFiles(contents);
+
+        const readingsPromise = await Promise.all(tempFiles.map(file => fileManager.findValues(MOTHERBOARD_DIRECTORY, file.LABEL)));
+
+        const readings = await Promise.all(readingsPromise);
+
+        console.log(`Readings:\n${readings}`);
+        res.json(readings);
+        
+    } catch (error) {
+        console.error(`Error fetching motherboard values: ${error.message}`);
+        res.status(500).json({error: `Could not fetch temperature values`});
     }
 });
 
