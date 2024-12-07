@@ -33,8 +33,10 @@ function findMotherboardFiles(dirContents) {
     const voltageRegex = /in\d+_\w+/;
     const fanRegex = /fan\d+_\w+/;
 
-    let matches = dirContents.filter(filename => voltageRegex.test(filename));
-    matches.push(dirContents.filter(filename => fanRegex.test(filename)));
+    let voltMatches = dirContents.filter(filename => voltageRegex.test(filename));
+    let fanMatches = dirContents.filter(filename => fanRegex.test(filename));
+
+    let matches = voltMatches.concat(fanMatches);
     
     console.log(`matches in motherboard files ${matches}`);
 
