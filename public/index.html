@@ -62,6 +62,8 @@
                 const response = await fetch(`/api/motherboard`);
                 const data = await response.json();
 
+                const tableBody = document.getElementById('readingsBody');
+
                 data.forEach(reading => {
                     const row = document.createElement('tr');
                     row.innerHTML = `<td>${reading.LABEL}</td><td>${reading.VALUE}</td>`;
