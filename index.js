@@ -2,13 +2,12 @@ const fs = require('node:fs').promises; // DOC: https://nodejs.org/api/fs.html
 const path = require('node:path'); // DOC: https://nodejs.org/api/path.html
 const fileManager = require('./readFiles.js');
 const express = require("express");
-const { read } = require('node:fs');
-const { console } = require('node:inspector');
 const server = express();
+require('dotenv').config();
 
 
-const hostname = '';
-const port = 3000;
+const hostname = process.env.HOSTNAME;
+const port = process.env.PORT;
 const CPU_TEMPERATURE_DIRECTORY = '/sys/class/hwmon/hwmon2'; // CPU Temp Directory
 const MOTHERBOARD_DIRECTORY = "/sys/class/hwmon/hwmon3"; // Motherboard IO Directory
 

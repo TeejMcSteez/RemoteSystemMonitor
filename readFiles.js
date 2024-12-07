@@ -1,4 +1,3 @@
-const { rejects } = require('node:assert');
 const fs = require('node:fs');
 const path = require('node:path');
 // Reads the content of a folder
