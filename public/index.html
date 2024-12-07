@@ -52,8 +52,8 @@
 
                 const combinedReadings = [
                     ...temperatures.filter(reading => reading.LABEL.includes('_input') || reading.LABEL.includes('_label')), 
-                    ...motherboard];
-
+                    ...motherboard.filter(reading => reading.LABEL.includes('_input') || reading.LABEL.includes('_target')) 
+                ];
                 combinedReadings.sort((a,b) => a.LABEL.localeCompare(b.LABEL));
 
                 combinedReadings.forEach(reading => {
