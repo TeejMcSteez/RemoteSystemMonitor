@@ -12,6 +12,16 @@
             width: 100%;
             background-color: grey;
         }
+        table, #doughnut {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+        }
+        #doughnut {
+            padding: 15px;
+            margin: 10px;
+        }
         h1, table {
             padding: 20px;
             margin: 10px;
@@ -25,6 +35,10 @@
 
     <h1>Hardware Information</h1>
 
+    <div id="doughnut">
+        <canvas id="memoryDoughnut"></canvas>
+    </div>
+
     <table id="readingsTable">
         <thead>
                 <tr>
@@ -36,9 +50,36 @@
 
         </tbody>
     </table>
+
     <script>
         async function updateValues() {
             try {
+                // Chart stuff
+                const chartInformation = fetch('/api/chartInformation'); // Returns an array of free memory and used memory
+
+                const data = {
+                    labels: ["Free Memory", "Used Memory"], 
+                    datasets: [{
+                        label: 'Memory Information',
+                        data: [chartInformation[0], chartInformation[1]],
+                        backgroundColor: ['rgb(50, 150, 50)', 'rgb(255, 50, 0)'],
+                        hoverOffset: 4
+                    }]
+                };
+                const options = {
+                    title: {
+                        display: true,
+                        text: "Memory Information"
+                    }
+                }
+                const config = {
+                    type: 'doughnut',
+                    data: data,
+                    options: options
+                };
+                new Chart("memoryDoughnut", config);
+
+                //Table Stuff
                 const [tempResponse, motherboardResponse] = await Promise.all([
                     fetch('/api/temperatures'),
                     fetch('/api/motherboard')

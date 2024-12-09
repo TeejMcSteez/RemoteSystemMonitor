@@ -1,9 +1,15 @@
-const os = require("noed:os");
+const os = require("node:os");
 
 function getCurrentMemory() {
     const freeMem = os.freemem();
 
     return freeMem;    
+}
+
+function getTotalMemory() {
+    const totalMem = os.totalmem();
+
+    return totalMem;
 }
 
 function getUptime() {
@@ -12,8 +18,4 @@ function getUptime() {
     return uptime;
 }
 
-function getMemoryTotal() {
-    const totalMem = os.totalmem();
-
-    return totalMem;
-}
+module.exports = {getCurrentMemory, getUptime, getTotalMemory};

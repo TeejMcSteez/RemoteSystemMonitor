@@ -4,6 +4,7 @@ const fileManager = require('./readFiles.js'); // Utils for index
 const express = require("express"); // DOC: https://expressjs.com/en/5x/api.html
 require('dotenv').config(); // DOC: https://www.npmjs.com/package/dotenv
 const server = express(); //Namespace for express call
+const system = require('./system.js');
 
 
 const hostname = process.env.HOSTNAME;
@@ -60,6 +61,12 @@ server.get('/api/motherboard', async (req, res) => {
         console.error(`Error fetching motherboard values: ${error.message}`);
         res.status(500).json({error: `Could not fetch temperature values`});
     }
+});
+
+server.get('/api/chartInformation', async (req, res) => {
+    const memoryInformation = [system.getCurrentMemory(), system.getTotalMemory()];
+
+    res.json(memoryInformation);
 });
 
 server.listen(port, () => console.log(`Server listening on port: http://${hostname}:${port}`));
