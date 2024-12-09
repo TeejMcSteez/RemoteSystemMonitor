@@ -28,4 +28,10 @@ function bytesToGb(memInBytes) {
     return memInGb;
 }
 
-module.exports = {getCurrentMemory, getUptime, getTotalMemory};
+function splitUptime(uptime) {
+    const uptimeSplitArray = [uptime / 86400, uptime / 3600, uptime / 60, uptime] // Days, Hrs, Mins, Seconds
+
+    return splitUptime;
+}
+
+module.exports = {getCurrentMemory, getUptime, getTotalMemory, splitUptime};

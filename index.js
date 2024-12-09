@@ -72,7 +72,9 @@ server.get('/api/chartInformation', async (req, res) => {
 server.get('/api/uptime', async (req, res) => {
     const uptime = system.getUptime();
 
-    res.json(uptime);
+    const uptimeSplit = system.splitUptime(uptime);
+
+    res.json(uptimeSplit);
 });
 
 server.listen(port, () => console.log(`Server listening on port: http://${hostname}:${port}`));
