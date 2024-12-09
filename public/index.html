@@ -53,10 +53,8 @@
     </table>
 
     <script>
-        async function updateValues() {
-            try {
-                // Chart stuff
-                const chartInformation = fetch('/api/chartInformation'); // Returns an array of free memory and used memory
+        function startChart() {
+            const chartInformation = fetch('/api/chartInformation'); // Returns an array of free memory and used memory
 
                 const data = {
                     labels: ["Free Memory", "Used Memory"], 
@@ -78,7 +76,16 @@
                     data: data,
                     options: options
                 };
+
                 new Chart("memoryDoughnut", config);
+        }
+
+        async function updateValues() {
+            try {
+                // Updating Chart stuff
+                const chartInformation = fetch('/api/chartInformation'); // Returns an array of free memory and used memory
+
+                memoryDoughnut.data.datasets[0].data = [chartInformation[0], chartInformation[1]];
 
                 //Table Stuff
                 const [tempResponse, motherboardResponse] = await Promise.all([
