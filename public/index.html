@@ -38,7 +38,7 @@
         table {
             width: 40%; /* Table takes up 40% of the width */
             margin: 0; /* Remove extra margin */
-            background-color: white; /* Stand out against grey background */
+            background-color: rgb(247, 132, 132); /* Stand out against grey background */
             border-collapse: collapse; /* Remove extra space between cells */
         }
 
@@ -67,16 +67,13 @@
             #content {
                 flex-direction: column;
             }
-            canvas {
-                max-width: 50%;
-                max-height: 50%;
-            }
         }
     </style>
 
     <h1>Hardware Information</h1>
 
     <div id="content">
+
         <table id="readingsTable">
             <thead>
                     <tr>
@@ -92,6 +89,7 @@
         <div id="doughnut">
             <canvas id="memoryDoughnut"></canvas>
         </div>
+
     </div>
 
     <script>
@@ -106,7 +104,7 @@
                 const data = {
                     labels: ["Free Memory", "Used Memory"],
                     datasets: [{
-                        label: 'Memory Information',
+                        label: 'Bytes',
                         data: [chartInformation[0], chartInformation[1]], // Use fetched data
                         backgroundColor: ['rgb(50, 150, 50)', 'rgb(255, 50, 0)'],
                         hoverOffset: 4
@@ -118,7 +116,7 @@
                     plugins: {
                         title: {
                             display: true,
-                            text: "Memory Information"
+                            text: "Memory Usage"
                         }
                     }
                 };
@@ -178,6 +176,7 @@
                 console.error(`Error updating temperatures: ${error.message}`);
             }
         }
+
         startChart();
         updateValues();
         setInterval(updateValues, 3000);
