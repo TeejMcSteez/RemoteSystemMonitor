@@ -34,8 +34,9 @@ function splitUptime(uptime) {
     const hrs = Math.floor(uptime / 3600);
     uptime -= 3600 * hrs;
     const mins = Math.floor(uptime / 60);
-    uptime -= Math.floor(60 * mins);
-    const uptimeSplitArray = [days, hrs, mins, uptime]; // Days, Hrs, Mins, Seconds
+    uptime -= 60 * mins;
+    const seconds = Math.floor(uptime);
+    const uptimeSplitArray = [days, hrs, mins, seconds]; // Days, Hrs, Mins, Seconds
 
     return uptimeSplitArray;
 }
