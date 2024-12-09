@@ -53,39 +53,57 @@
     </table>
 
     <script>
-        function startChart() {
-            const chartInformation = fetch('/api/chartInformation'); // Returns an array of free memory and used memory
+        let memoryDoughnut;
+        async function startChart() {
+            try {
+                // Fetch chart information
+                const response = await fetch('/api/chartInformation'); // Wait for the response
+                const chartInformation = await response.json(); // Parse the JSON
 
+                // Chart data
                 const data = {
-                    labels: ["Free Memory", "Used Memory"], 
+                    labels: ["Free Memory", "Used Memory"],
                     datasets: [{
                         label: 'Memory Information',
-                        data: [chartInformation[0], chartInformation[1]],
+                        data: [chartInformation[0], chartInformation[1]], // Use fetched data
                         backgroundColor: ['rgb(50, 150, 50)', 'rgb(255, 50, 0)'],
                         hoverOffset: 4
                     }]
                 };
+
+                // Chart options
                 const options = {
-                    title: {
-                        display: true,
-                        text: "Memory Information"
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: "Memory Information"
+                        }
                     }
-                }
+                };
+
+                // Chart configuration
                 const config = {
                     type: 'doughnut',
                     data: data,
                     options: options
                 };
 
-                new Chart("memoryDoughnut", config);
-        }
+                // Create the chart and save the instance
+                const ctx = document.getElementById("memoryDoughnut").getContext('2d');
+                memoryDoughnut = new Chart(ctx, config);
+            } catch (error) {
+                console.error(`Error starting chart: ${error.message}`);
+            }
+}
 
         async function updateValues() {
             try {
                 // Updating Chart stuff
-                const chartInformation = fetch('/api/chartInformation'); // Returns an array of free memory and used memory
+                const response = await fetch('/api/chartInformation');
+                const chartInformation =  await response.json();// Returns an array of free memory and used memory
 
                 memoryDoughnut.data.datasets[0].data = [chartInformation[0], chartInformation[1]];
+                memoryDoughnut.update();
 
                 //Table Stuff
                 const [tempResponse, motherboardResponse] = await Promise.all([
