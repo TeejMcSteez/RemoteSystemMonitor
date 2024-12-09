@@ -118,7 +118,7 @@
                 console.error(`Error updating temperatures: ${error.message}`);
             }
         }
-
+        startChart();
         updateValues();
         setInterval(updateValues, 3000);
 
