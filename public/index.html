@@ -57,6 +57,7 @@
             justify-content: center; /* Center the canvas inside the container */
             align-items: center;
             background-color: rgb(240, 181, 142); /* Optional: Background for chart container */
+            border-radius: 5% 5% 25% 5%;
         }
 
         canvas {
@@ -66,6 +67,8 @@
         @media screen and (max-width: 992px) { /* Dont ask magic number */
             #content {
                 flex-direction: column;
+                justify-content: space-evenly;
+                align-items: center;
             }
             #doughnut {
                 width: 75%;
@@ -107,7 +110,7 @@
                 const data = {
                     labels: ["Free Memory", "Used Memory"],
                     datasets: [{
-                        label: 'Bytes',
+                        label: 'GB',
                         data: [chartInformation[0], chartInformation[1]], // Use fetched data
                         backgroundColor: ['rgb(50, 150, 50)', 'rgb(255, 50, 0)'],
                         hoverOffset: 4
