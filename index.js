@@ -69,4 +69,10 @@ server.get('/api/chartInformation', async (req, res) => {
     res.json(memoryInformation);
 });
 
+server.get('/api/uptime', async (req, res) => {
+    const uptime = system.getUptime();
+
+    res.json(uptime);
+});
+
 server.listen(port, () => console.log(`Server listening on port: http://${hostname}:${port}`));

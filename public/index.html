@@ -96,6 +96,12 @@
             <canvas id="memoryDoughnut"></canvas>
         </div>
 
+        <div id="uptime">
+            <h2>Uptime</h2>
+            <p id="uptimeHolder"></p>
+            <footer>(In Seconds)</footer>
+        </div>
+
     </div>
 
     <script>
@@ -145,8 +151,8 @@
         async function updateValues() {
             try {
                 // Updating Chart stuff
-                const response = await fetch('/api/chartInformation');
-                const chartInformation =  await response.json();// Returns an array of free memory and used memory
+                const chartResponse = await fetch('/api/chartInformation');
+                const chartInformation =  await chartResponse.json();// Returns an array of free memory and used memory
 
                 memoryDoughnut.data.datasets[0].data = [chartInformation[0], chartInformation[1]];
                 memoryDoughnut.update();
@@ -177,6 +183,13 @@
                     `;
                     tableBody.appendChild(row);
                 });
+
+                // Uptime Stuff
+                const uptimeResponse = await fetch('/api/uptime');
+                const uptime = await uptimeResponse.json();
+
+                const uptimeHolder = document.getElementById('uptimeHolder'); // Selecting P tag that hold the value of uptime
+                uptimeHolder.innerHTML = uptime;
 
             } catch (error) {
                 console.error(`Error updating temperatures: ${error.message}`);
