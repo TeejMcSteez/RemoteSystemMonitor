@@ -34,6 +34,13 @@
             padding: 20px; /* Add space around the content */
             box-sizing: border-box; /* Include padding in width calculations */
         }
+        /*Making all graphics and uptime display vertically beside the table on desktop*/
+        #gaphics {
+            flex-direction: column;
+            justify-content: flex-start;
+            padding: 20px;
+            box-sizing: border-box;
+        }
 
         table {
             width: 40%; /* Table takes up 40% of the width */
@@ -91,28 +98,40 @@
     
             </tbody>
         </table>
-    
-        <div id="doughnut">
-            <canvas id="memoryDoughnut"></canvas>
-        </div>
+        <div id="graphics">
+            <div id="doughnut">
+                <canvas id="memoryDoughnut"></canvas>
+            </div>
 
-        <div id="uptime">
-            <h2>Uptime</h2>
-            <p id="uptimeHolder"></p>
+            <div id="bar">
+                <canvas id="loadBar"></canvas>
+            </div>
+
+            </div>
+
+            <div id="uptime">
+                <h2>Uptime</h2>
+                <p id="uptimeHolder"></p>
+            </div>
+
         </div>
 
     </div>
 
     <script>
         let memoryDoughnut;
+        let loadBar;
         async function startChart() {
             try {
                 // Fetch chart information
                 const response = await fetch('/api/chartInformation'); // Wait for the response
                 const chartInformation = await response.json(); // Parse the JSON
 
+                const loadResponse = await fetch('/api/loadAvg');
+                const loadAvg = await loadResponse.json();
+
                 // Chart data
-                const data = {
+                const doughnutData = {
                     labels: ["Free Memory", "Used Memory"],
                     datasets: [{
                         label: 'GB',
@@ -122,8 +141,18 @@
                     }]
                 };
 
+                const loadData = {
+                    labels: ["1 Min", "5 Min", "15 Min"],
+                    datasets: [{
+                        label: 'Processes',
+                        data: [loadAvg[0], loadAvg[1], loadAvg[2]], // 1, 5, 10 Min
+                        backgroundColor: ["rgb(255, 0, 50)","rgb(0, 250, 50)","rgb(50, 15, 250)"],
+                        hoverOffset: 4
+                    }]
+                };
+
                 // Chart options
-                const options = {
+                const doughnutOptions = {
                     plugins: {
                         title: {
                             display: true,
@@ -132,48 +161,74 @@
                     }
                 };
 
-                // Chart configuration
-                const config = {
-                    type: 'doughnut',
-                    data: data,
-                    options: options
+                const loadOptions = {
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: "Load Average"
+                        }
+                    }
                 };
 
-                // Create the chart and save the instance
-                const ctx = document.getElementById("memoryDoughnut").getContext('2d');
-                memoryDoughnut = new Chart(ctx, config);
+                // Chart configuration
+                const doughnutConfig = {
+                    type: 'doughnut',
+                    data: doughnutData,
+                    options: doughnutOptions
+                };
+
+                const loadConfig = {
+                    type: "bar",
+                    data: loadData,
+                    options: loadOptions
+                };
+
+                // calling graph and saving the current instance
+                const memctx = document.getElementById("memoryDoughnut").getContext('2d');
+                memoryDoughnut = new Chart(memctx, doughnutConfig);
+
+                const loadctx = document.getElementById("loadBar").getContext("2d");
+                loadBar = new Chart(loadctx, loadConfig);
             } catch (error) {
                 console.error(`Error starting chart: ${error.message}`);
             }
-}
+        }
 
         async function updateValues() {
             try {
-                // Updating Chart stuff
+                // Updating Memory Chart stuff
                 const chartResponse = await fetch('/api/chartInformation');
                 const chartInformation =  await chartResponse.json();// Returns an array of free memory and used memory
 
                 memoryDoughnut.data.datasets[0].data = [chartInformation[0], chartInformation[1]];
                 memoryDoughnut.update();
 
+                // Load Average Chart Stuff
+                const loadResponse = await fetch('/api/loadAvg');
+                const loadAvg = await loadResponse.json();
+
+                loadBar.data.datasets[0].data = [loadAvg[0], loadAvg[1], loadAvg[2]];
+                loadBar.update();
+
                 //Table Stuff
                 const [tempResponse, motherboardResponse] = await Promise.all([
                     fetch('/api/temperatures'),
                     fetch('/api/motherboard')
                 ]);
-
+                // Updating temperature and motherboard values
                 const temperatures = await tempResponse.json();
                 const motherboard = await motherboardResponse.json();
-
+                
                 const tableBody = document.getElementById('readingsBody');
                 tableBody.innerHTML = '';
-
+                // Combines arrays and flattents all arrays into 1
                 const combinedReadings = [
                     ...temperatures.filter(reading => reading.LABEL.includes('_input') || reading.LABEL.includes('_label')), 
                     ...motherboard.filter(reading => reading.LABEL.includes('_input') || reading.LABEL.includes('_target')) 
                 ];
+                // Sorting arrays alphabetically 
                 combinedReadings.sort((a,b) => a.LABEL.localeCompare(b.LABEL));
-
+                // Applys styles to html page
                 combinedReadings.forEach(reading => {
                     const row = document.createElement('tr');
                     row.innerHTML = `

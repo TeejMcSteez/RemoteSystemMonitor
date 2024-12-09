@@ -77,4 +77,10 @@ server.get('/api/uptime', async (req, res) => {
     res.json(uptimeSplit);
 });
 
+server.get('/api/loadAvg', (req, res) => {
+    const loadAvg = system.getLoadAvg();
+
+    res.json(loadAvg);
+}); 
+
 server.listen(port, () => console.log(`Server listening on port: http://${hostname}:${port}`));
