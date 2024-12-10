@@ -79,7 +79,6 @@ server.get('/api/uptime', async (req, res) => {
 
 server.get('/api/loadAvg', (req, res) => {
     const loadAvg = system.getLoadAvg();
-    console.log(`load average sent: ${loadAvg}`);
 
     res.json(loadAvg);
 }); 

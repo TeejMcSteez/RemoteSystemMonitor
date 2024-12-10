@@ -26,8 +26,8 @@
         }
 
         #content {
+            flex: 1;
             display: flex;
-            flex-direction: row; /* Arrange table and chart side-by-side */
             justify-content: space-between;
             width: 100%; /* Take full width of the page */
             align-items: flex-start; /* Align table and chart to the top */
@@ -36,10 +36,10 @@
         }
         /*Making all graphics and uptime display vertically beside the table on desktop*/
         #gaphics {
+            flex: 2;
+            display: flex;
             flex-direction: column;
-            justify-content: space-evenly;
             padding: 20px;
-            box-sizing: border-box;
         }
 
         table {
