@@ -45,6 +45,8 @@ function getLoadAvg() {
     const loadAvg = os.loadavg();
     const flooredAvg = [Math.floor(loadAvg[0]), Math.floor(loadAvg[1]), Math.floor(loadAvg[2])];
 
+    console.log(`Floored average ${flooredAvg}`);
+
     return flooredAvg;
 }
 
