@@ -35,7 +35,7 @@
             box-sizing: border-box; /* Include padding in width calculations */
         }
         /*Making all graphics and uptime display vertically beside the table on desktop*/
-        #gaphics {
+        #graphics {
             flex: 2;
             display: flex;
             flex-direction: column;
@@ -71,11 +71,33 @@
             max-width: 100%;
             max-height: 100%; /* Ensure the canvas scales with its container */
         }
-        @media screen and (max-width: 992px) { /* Dont ask magic number */
+
+        #uptime {
+            margin-top: 20px;
+            background-color: rgb(200, 200, 200);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            color: black;
+        }
+
+        @media screen and (max-width: 992px) { /* For mobile screens */
             #content {
                 flex-direction: column;
                 justify-content: space-evenly;
                 align-items: center;
+            }
+
+            table {
+                width: 90%; /* Expand table for smaller screens */
+            }
+
+            #graphics {
+                width: 90%; /* Ensure graphics fit well */
+            }
+
+            #doughnut {
+                width: 100%; /* Make chart container responsive */
             }
         }
     </style>
@@ -86,15 +108,15 @@
 
         <table id="readingsTable">
             <thead>
-                    <tr>
-                        <th>Readings Label</th>
-                        <th>Value</th>
-                    </tr>
+                <tr>
+                    <th>Readings Label</th>
+                    <th>Value</th>
+                </tr>
             </thead>
             <tbody id="readingsBody">
-    
             </tbody>
         </table>
+
         <div id="graphics">
             <div id="doughnut">
                 <canvas id="memoryDoughnut"></canvas>
@@ -103,14 +125,11 @@
             <div id="bar">
                 <canvas id="loadBar"></canvas>
             </div>
+        </div>
 
-            </div>
-
-            <div id="uptime">
-                <h2>Uptime</h2>
-                <p id="uptimeHolder"></p>
-            </div>
-
+        <div id="uptime">
+            <h2>Uptime</h2>
+            <p id="uptimeHolder"></p>
         </div>
 
     </div>
@@ -118,21 +137,20 @@
     <script>
         let memoryDoughnut;
         let loadBar;
+
         async function startChart() {
             try {
-                // Fetch chart information
-                const response = await fetch('/api/chartInformation'); // Wait for the response
-                const chartInformation = await response.json(); // Parse the JSON
+                const response = await fetch('/api/chartInformation');
+                const chartInformation = await response.json();
 
                 const loadResponse = await fetch('/api/loadAvg');
                 const loadAvg = await loadResponse.json();
 
-                // Chart data
                 const doughnutData = {
                     labels: ["Free Memory", "Used Memory"],
                     datasets: [{
                         label: 'GB',
-                        data: [chartInformation[0], chartInformation[1]], // Use fetched data
+                        data: [chartInformation[0], chartInformation[1]],
                         backgroundColor: ['rgb(50, 150, 50)', 'rgb(255, 50, 0)'],
                         hoverOffset: 4
                     }]
@@ -142,13 +160,12 @@
                     labels: ["1 Min", "5 Min", "15 Min"],
                     datasets: [{
                         label: 'Processes',
-                        data: [loadAvg[0], loadAvg[1], loadAvg[2]], // 1, 5, 10 Min
+                        data: [loadAvg[0], loadAvg[1], loadAvg[2]],
                         backgroundColor: ["rgb(255, 0, 50)","rgb(0, 250, 50)","rgb(50, 15, 250)"],
                         hoverOffset: 4
                     }]
                 };
 
-                // Chart options
                 const doughnutOptions = {
                     plugins: {
                         title: {
@@ -167,7 +184,6 @@
                     }
                 };
 
-                // Chart configuration
                 const doughnutConfig = {
                     type: 'doughnut',
                     data: doughnutData,
@@ -180,7 +196,6 @@
                     options: loadOptions
                 };
 
-                // calling graph and saving the current instance
                 const memctx = document.getElementById("memoryDoughnut").getContext('2d');
                 memoryDoughnut = new Chart(memctx, doughnutConfig);
 
@@ -193,39 +208,36 @@
 
         async function updateValues() {
             try {
-                // Updating Memory Chart stuff
                 const chartResponse = await fetch('/api/chartInformation');
-                const chartInformation =  await chartResponse.json();// Returns an array of free memory and used memory
+                const chartInformation = await chartResponse.json();
 
                 memoryDoughnut.data.datasets[0].data = [chartInformation[0], chartInformation[1]];
                 memoryDoughnut.update();
 
-                // Load Average Chart Stuff
                 const loadResponse = await fetch('/api/loadAvg');
                 const loadAvg = await loadResponse.json();
 
                 loadBar.data.datasets[0].data = [loadAvg[0], loadAvg[1], loadAvg[2]];
                 loadBar.update();
 
-                //Table Stuff
                 const [tempResponse, motherboardResponse] = await Promise.all([
                     fetch('/api/temperatures'),
                     fetch('/api/motherboard')
                 ]);
-                // Updating temperature and motherboard values
+
                 const temperatures = await tempResponse.json();
                 const motherboard = await motherboardResponse.json();
-                
+
                 const tableBody = document.getElementById('readingsBody');
                 tableBody.innerHTML = '';
-                // Combines arrays and flattents all arrays into 1
+
                 const combinedReadings = [
-                    ...temperatures.filter(reading => reading.LABEL.includes('_input') || reading.LABEL.includes('_label')), 
-                    ...motherboard.filter(reading => reading.LABEL.includes('_input') || reading.LABEL.includes('_target')) 
+                    ...temperatures.filter(reading => reading.LABEL.includes('_input') || reading.LABEL.includes('_label')),
+                    ...motherboard.filter(reading => reading.LABEL.includes('_input') || reading.LABEL.includes('_target'))
                 ];
-                // Sorting arrays alphabetically 
-                combinedReadings.sort((a,b) => a.LABEL.localeCompare(b.LABEL));
-                // Applys styles to html page
+
+                combinedReadings.sort((a, b) => a.LABEL.localeCompare(b.LABEL));
+
                 combinedReadings.forEach(reading => {
                     const row = document.createElement('tr');
                     row.innerHTML = `
@@ -235,12 +247,11 @@
                     tableBody.appendChild(row);
                 });
 
-                // Uptime Stuff
                 const uptimeResponse = await fetch('/api/uptime');
                 const uptime = await uptimeResponse.json();
 
-                const uptimeHolder = document.getElementById('uptimeHolder'); // Selecting P tag that hold the value of uptime
-                uptimeHolder.innerHTML = `${uptime[0]}:${uptime[1]}:${uptime[2]}:${uptime[3]}`; // Days:Hrs:Mins:Seconds
+                const uptimeHolder = document.getElementById('uptimeHolder');
+                uptimeHolder.innerHTML = `${uptime[0]}:${uptime[1]}:${uptime[2]}:${uptime[3]}`;
 
             } catch (error) {
                 console.error(`Error updating temperatures: ${error.message}`);
@@ -255,4 +266,3 @@
     
 </body>
 </html>
-<!-- https://www.youtube.com/watch?v=dQw4w9WgXcQ -->
