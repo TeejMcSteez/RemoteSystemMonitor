@@ -34,16 +34,18 @@ for dir in "$hwmon"/*; do
 
     # Read the "name" file inside the directory
     content=$(cat "$dir/name" 2>>buildErrors.log)
-
+    
     if [[ "$content" == "coretemp" ]]; then
         echo "CPU_TEMPERATURE_DIRECTORY=$dir" >> "$env_file"
         echo "Appended $content to $env_file"
     fi
-
     if [[ "$content" == "nct6793" ]]; then # My specific PC all round sensor need to do research on all possible values used by modern PC's
         echo "MOTHERBOARD_DIRECTORY=$dir" >> "$env_file"
         echo "Appended $content to $env_file"
     fi
+
+    # Replacing conditionals with grep
+    
 done
 
 echo "Adding hostname and port to env variables"
