@@ -5,6 +5,11 @@
 
 echo "Starting build . . ."
 
+echo "Please enter the hostname for the HTTP server . . ."
+read HOSTNAME
+
+echo "Building node server . . ."
+
 npm init -y
 npm i express
 npm i dotenv
@@ -13,9 +18,6 @@ echo "Initialized npm and installed necessary packages"
 
 # Network connection
 
-# EDIT THIS!!
-HOSTNAME="0.0.0.0" # OR yourdns.com
-#--------------
 PORT=3000
 
 # hwmon
@@ -33,12 +35,12 @@ for dir in "$hwmon"/*; do
     # Read the "name" file inside the directory
     content=$(cat "$dir/name" 2>>buildErrors.log)
 
-    if [[ "$content" == "name1" ]]; then
+    if [[ "$content" == "coretemp" ]]; then
         echo "CPU_TEMPERATURE_DIRECTORY=$dir" >> "$env_file"
         echo "Appended $content to $env_file"
     fi
 
-    if [[ "$content" == "name2" ]]; then
+    if [[ "$content" == "nct6793" ]]; then # My specific PC all round sensor need to do research on all possible values used by modern PC's
         echo "MOTHERBOARD_DIRECTORY=$dir" >> "$env_file"
         echo "Appended $content to $env_file"
     fi
