@@ -47,4 +47,15 @@ function getLoadAvg() {
     return loadAvg;
 }
 
-module.exports = {getCurrentMemory, getUptime, getTotalMemory, splitUptime, getLoadAvg};
+function convert(data) {
+    data.forEach(value => {
+        if (value.LABEL.includes("in\d+_input")) { // If is millivolts converts to Volts
+            value.VALUE = value.VALUE / 1000; // millivolts / 1000 = V
+        } else if (value.LABEL.includes("temp")) {
+            value.VALUE = value.VALUE / 1000; // millidegrees C / 10000 = C
+        } 
+    });
+    return data; // After converting regular units returns the new object array with converted values
+}
+
+module.exports = {getCurrentMemory, getUptime, getTotalMemory, splitUptime, getLoadAvg, convert};
