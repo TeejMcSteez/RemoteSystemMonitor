@@ -238,6 +238,9 @@
                     ...motherboard.filter(reading => reading.LABEL.includes('_input') || reading.LABEL.includes('_target'))
                 ];
 
+                const tempRegex = /temp\d+_input/;
+                const voltRegex = /in\d+_input/;
+
                 combinedReadings.forEach(reading => {
                     const row = document.createElement('tr');
                     // Labels readings based of value type
@@ -248,13 +251,13 @@
                         `;
                         tableBody.appendChild(row);
 
-                    } else if (reading.LABEL.includes("in\d+_input")) {
+                    } else if (voltRegex.test(reading.LABEL)) {
                             row.innerHTML = `
                             <td>${reading.LABEL}</td>
                             <td>${reading.VALUE} V</td>
                         `;
                         tableBody.appendChild(row);
-                    } else if (reading.LABEL.includes("temp\d+_input")) {
+                    } else if (tempRegex.test(reading.LABEL)) {
                             row.innerHTML = `
                             <td>${reading.LABEL}</td>
                             <td>${reading.VALUE} °C</td>
