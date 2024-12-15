@@ -245,21 +245,21 @@
                     // Labels readings based of value type
                     if (reading.LABEL.includes("fan")) {
                             row.innerHTML = `
-                            <td>${reading.LABEL}</td>
-                            <td>${reading.VALUE}RPM</td>
+                            <td>RPM</td>
+                            <td>${reading.VALUE}</td>
                         `;
                         tableBody.appendChild(row);
 
                     } else if (reading.LABEL.includes("in\d+_input")) {
                             row.innerHTML = `
-                            <td>${reading.LABEL}</td>
-                            <td>${reading.VALUE}V</td>
+                            <td>V</td>
+                            <td>${reading.VALUE}</td>
                         `;
                         tableBody.appendChild(row);
                     } else if (reading.LABEL.includes("temp")) {
                             row.innerHTML = `
-                            <td>${reading.LABEL}</td>
-                            <td>${reading.VALUE}°C</td>
+                            <td>°C</td>
+                            <td>${reading.VALUE}</td>
                         `;
                         tableBody.appendChild(row);
                     } else {
