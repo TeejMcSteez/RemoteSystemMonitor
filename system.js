@@ -48,10 +48,12 @@ function getLoadAvg() {
 }
 
 function convert(data) {
+    const voltageRegex = /in\d+_\w+/
+    const tempRegex = /temp\d+_input/
     data.forEach(value => {
-        if (value.LABEL.includes(/in\d+_input/)) { // If is millivolts converts to Volts
+        if (voltageRegex.test(value.LABEL)) { // If is millivolts converts to Volts
             value.VALUE = value.VALUE / 1000; // millivolts / 1000 = V
-        } else if (value.LABEL.includes("temp")) {
+        } else if (tempRegex.test(value.LABEL)) {
             value.VALUE = value.VALUE / 1000; // millidegrees C / 10000 = C
         } 
     });
