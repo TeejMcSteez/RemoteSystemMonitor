@@ -36,8 +36,11 @@ server.get('/api/temperatures', async (req, res) => {
 
        const readings = await Promise.all(readingsPromise);
 
-        // sends each readings value as a json response
-        res.json(readings);
+       const convertedReadings = system.convert(readings);
+
+        // sends each converted readings value as a json response
+        // Only converts temperature and millivolts currently otherwise returns the data sent to it
+        res.json(convertedReadings);
 
     } catch (error) {
         console.error(`Error fetching temperatures ${error.message}`);
@@ -55,7 +58,9 @@ server.get('/api/motherboard', async (req, res) => {
 
         const readings = await Promise.all(readingsPromise);
 
-        res.json(readings);
+        const convertedReadings = system.convert(readings);
+
+        res.json(convertedReadings);
         
     } catch (error) {
         console.error(`Error fetching motherboard values: ${error.message}`);
