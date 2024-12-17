@@ -79,12 +79,14 @@ echo "Adding hostname and port to env variables"
 echo "HOSTNAME=$HOSTNAME" >> "$env_file"
 echo "PORT=$PORT" >> "$env_file"
 
-echo "Starting git pull"
-
+echo "Starting git clone . . ."
+# Creating src dir for files
+mkdir src
+cd src
+#getting files from repo
 git init 
-git remote add origin https://github.com/TeejMcSteez/RemoteSystemMonitor
-git pull origin master
-
+git clone https://github.com/TeejMcSteez/RemoteSystemMonitor
+# returning to root dir
 cd ..
 
 echo "Repo pulled successfully, Ready for deployment!"
