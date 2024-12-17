@@ -140,7 +140,9 @@
     <script>
         let memoryDoughnut;
         let loadBar;
-        let tempMax = 0, maxVoltage = 0, maxFanInput = 0;
+        let tempMaxes = {};
+        let maxVoltages  = {};        
+        let maxFanInputs = {};        
 
         async function startChart() {
             try {
@@ -247,34 +249,34 @@
                     const row = document.createElement('tr');
                     // Labels readings based of value type
                     if (reading.LABEL.includes("fan")) {
-                            if (reading.VALUE > maxFanInput) {
-                                maxFanInput = reading.VALUE;
+                            if (!maxFanInputs[reading.LABEL] || reading.VALUE > maxFanInputs[reading.LABEL]) {
+                                maxFanInputs[reading.LABEL] = reading.VALUE;
                             }
                             row.innerHTML = `
                             <td>${reading.LABEL}</td>
                             <td>${reading.VALUE} RPM</td>
-                            <td>${maxFanInput} RPM</td>
+                            <td>${maxFanInputs[reading.LABEL]} RPM</td>
                         `;
                         tableBody.appendChild(row);
 
                     } else if (voltRegex.test(reading.LABEL)) {
-                            if (reading.VALUE > maxVoltage) {
-                                maxVoltage = reading.VALUE;
+                        if (!maxVoltages[reading.LABEL] || reading.VALUE > maxVoltages[reading.LABEL]) {
+                                maxVoltages[reading.LABEL] = reading.VALUE;
                             }
                             row.innerHTML = `
                             <td>${reading.LABEL}</td>
                             <td>${reading.VALUE} V</td>
-                            <td>${maxVoltage} V</td>
+                            <td>${maxVoltages[reading.LABEL]} V</td>
                         `;
                         tableBody.appendChild(row);
                     } else if (tempRegex.test(reading.LABEL)) {
-                            if (reading.VALUE > tempMax) {
-                                tempMax = reading.VALUE;
+                        if (!tempMaxes[reading.LABEL] || reading.VALUE > tempMaxes[reading.LABEL]) {
+                                tempMaxes[reading.LABEL] = reading.VALUE;
                             }
                             row.innerHTML = `
                             <td>${reading.LABEL}</td>
                             <td>${reading.VALUE} °C</td>
-                            <td>${tempMax} °C</td>
+                            <td>${tempMaxes[reading.LABEL]} °C</td>
                         `;
                         tableBody.appendChild(row);
                     } else {
@@ -284,7 +286,7 @@
                         `;
                         tableBody.appendChild(row);
                     }
-
+                    counter++; // Increments counter for storing max values
                 });
 
                 const uptimeResponse = await fetch('/api/uptime');
