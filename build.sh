@@ -85,7 +85,8 @@ mkdir src
 cd src
 #getting files from repo
 git init 
-git clone https://github.com/TeejMcSteez/RemoteSystemMonitor
+git remote add origin https://github.com/TeejMcSteez/RemoteSystemMonitor
+git pull origin master
 # returning to root dir
 cd ..
 
