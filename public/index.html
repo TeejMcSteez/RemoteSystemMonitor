@@ -140,6 +140,7 @@
     <script>
         let memoryDoughnut;
         let loadBar;
+        let tempMax = 0, maxVoltage = 0, maxFanInput = 0;
 
         async function startChart() {
             try {
@@ -211,7 +212,6 @@
 
         async function updateValues() {
             try {
-                let tempMax = 0, maxVoltage = 0, maxFanInput = 0;
                 const chartResponse = await fetch('/api/chartInformation');
                 const chartInformation = await chartResponse.json();
 
@@ -297,7 +297,6 @@
                 console.error(`Error updating temperatures: ${error.message}`);
             }
         }
-
         startChart();
         updateValues();
         setInterval(updateValues, 3000);
