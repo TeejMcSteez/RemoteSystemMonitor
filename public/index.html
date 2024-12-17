@@ -258,7 +258,6 @@
                             <td>${maxFanInputs[reading.LABEL]} RPM</td>
                         `;
                         tableBody.appendChild(row);
-
                     } else if (voltRegex.test(reading.LABEL)) {
                         if (!maxVoltages[reading.LABEL] || reading.VALUE > maxVoltages[reading.LABEL]) {
                                 maxVoltages[reading.LABEL] = reading.VALUE;
@@ -295,7 +294,7 @@
                 uptimeHolder.innerHTML = `${uptime[0]}:${uptime[1]}:${uptime[2]}:${uptime[3]}`;
 
             } catch (error) {
-                console.error(`Error updating temperatures: ${error.message}`);
+                console.error(`Error updating values: ${error.message}`);
             }
         }
         startChart();
