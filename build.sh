@@ -44,7 +44,7 @@ for dir in "$hwmon"/*; do
         echo "CPU_TEMPERATURE_DIRECTORY=$dir" >> "$env_file"
         echo "Appended $content to $env_file"
     fi
-    # Looking for Motherboard Super I/O Chip Sensor
+    # Looking for Motherboard Super I/O Chip Sensorcd
     if [[ "$content" =~ nct[0-9]+ ]]; then # Nuvoton
         echo "MOTHERBOARD_DIRECTORY=$dir" >> "$env_file"
         echo "Appended $content to $env_file"
@@ -87,12 +87,4 @@ git pull origin master
 
 cd ..
 
-echo "Repo pulled successfully, build Successful would you like to start the server? (y/n)"
-read choice 
-if [["$choice" == "y"]]; then
-    echo "Starting node . . ."
-    node "src/index.js"
-fi
-if [["$choice" == "n"]]; then 
-    echo "Exiting build script ready for deployement"
-fi
+echo "Repo pulled successfully, Ready for deployment!"
