@@ -112,6 +112,7 @@
                 <tr>
                     <th>Readings Label</th>
                     <th>Value</th>
+                    <th>Max</th>
                 </tr>
             </thead>
             <tbody id="readingsBody">
@@ -210,6 +211,7 @@
 
         async function updateValues() {
             try {
+                let tempMax = 0, maxVoltage = 0, maxFanInput = 0;
                 const chartResponse = await fetch('/api/chartInformation');
                 const chartInformation = await chartResponse.json();
 
@@ -245,22 +247,34 @@
                     const row = document.createElement('tr');
                     // Labels readings based of value type
                     if (reading.LABEL.includes("fan")) {
+                            if (reading.VALUE > maxFanInput) {
+                                maxFanInput = reading.VALUE;
+                            }
                             row.innerHTML = `
                             <td>${reading.LABEL}</td>
                             <td>${reading.VALUE} RPM</td>
+                            <td>${maxFanInput} RPM</td>
                         `;
                         tableBody.appendChild(row);
 
                     } else if (voltRegex.test(reading.LABEL)) {
+                            if (reading.VALUE > maxVoltage) {
+                                maxVoltage = reading.VALUE;
+                            }
                             row.innerHTML = `
                             <td>${reading.LABEL}</td>
                             <td>${reading.VALUE} V</td>
+                            <td>${maxVoltage} V</td>
                         `;
                         tableBody.appendChild(row);
                     } else if (tempRegex.test(reading.LABEL)) {
+                            if (reading.VALUE > tempMax) {
+                                tempMax = reading.VALUE;
+                            }
                             row.innerHTML = `
                             <td>${reading.LABEL}</td>
                             <td>${reading.VALUE} °C</td>
+                            <td>${tempMax} °C</td>
                         `;
                         tableBody.appendChild(row);
                     } else {
