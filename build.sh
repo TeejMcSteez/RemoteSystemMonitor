@@ -31,12 +31,45 @@ for dir in "$hwmon"/*; do
 
     # Read the "name" file inside the directory
     content=$(cat "$dir/name" 2>>buildErrors.log)
-    
-    if [[ "$content" == "coretemp" ]]; then
+    # Looking for CPU Thermal Sensor
+    if [[ "$content" == "coretemp" ]]; then # Intel Thermal sensor
         echo "CPU_TEMPERATURE_DIRECTORY=$dir" >> "$env_file"
         echo "Appended $content to $env_file"
     fi
-    if [[ "$content" =~ nct[0-9]+ ]]; then # My specific PC all round sensor need to do research on all possible values used by modern PC's
+    if [[ "$content" == "k10temp" ]]; then # Old AMD Thermal sensor
+        echo "CPU_TEMPERATURE_DIRECTORY=$dir" >> "$env_file"
+        echo "Appended $content to $env_file"
+    fi
+    if [[ "$content" == "zenpopwer" ]]; then # Modern AMD Thermal sensor
+        echo "CPU_TEMPERATURE_DIRECTORY=$dir" >> "$env_file"
+        echo "Appended $content to $env_file"
+    fi
+    # Looking for Motherboard Super I/O Chip Sensor
+    if [[ "$content" =~ nct[0-9]+ ]]; then # Nuvoton
+        echo "MOTHERBOARD_DIRECTORY=$dir" >> "$env_file"
+        echo "Appended $content to $env_file"
+    fi
+    if [[ "$content" =~ IT[0-9]+ ]]; then # ITE
+        echo "MOTHERBOARD_DIRECTORY=$dir" >> "$env_file"
+        echo "Appended $content to $env_file"
+    fi
+    if [[ "$content" =~ F[0-9]+ ]]; then # Fintek
+        echo "MOTHERBOARD_DIRECTORY=$dir" >> "$env_file"
+        echo "Appended $content to $env_file"
+    fi
+    if [[ "$content" =~ SMSC[0-9]+ ]]; then # SMSC
+        echo "MOTHERBOARD_DIRECTORY=$dir" >> "$env_file"
+        echo "Appended $content to $env_file"
+    fi
+    if [[ "$content" =~ CX[0-9]+ ]]; then # Chips and Technologies
+        echo "MOTHERBOARD_DIRECTORY=$dir" >> "$env_file"
+        echo "Appended $content to $env_file"
+    fi
+    if [[ "$content" =~ w837[0-9]+ ]]; then # Winbond
+        echo "MOTHERBOARD_DIRECTORY=$dir" >> "$env_file"
+        echo "Appended $content to $env_file"
+    fi
+    if [[ "$content" =~ rt[0-9]+ ]]; then # Realtek
         echo "MOTHERBOARD_DIRECTORY=$dir" >> "$env_file"
         echo "Appended $content to $env_file"
     fi
